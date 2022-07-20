@@ -14,7 +14,7 @@ void insertion_sort_list(listint_t **list)
 	listint_t *previous = NULL;
 	listint_t *save_next = NULL;
 
-	if (!(*list) || !list)
+	if (!list || !(*list))
 		return;
 
 	current = *list;
@@ -22,15 +22,19 @@ void insertion_sort_list(listint_t **list)
 	while (current)
 	{
 		previous = current->prev;
-		while (previous && previous->n > current->n)
+		if (previous && previous->n > current->n)
 		{
 			save_next = current->next;
 			current->prev = previous->prev;
-			(previous->prev)->next = current;
+			if (previous->prev)
+				(previous->prev)->next = current;
+			else
+				*list = current;
 			current->next = previous;
 			previous->prev = current;
 			previous->next = save_next;
-			save_next->prev = previous;
+			if (save_next)
+				save_next->prev = previous;
 			print_list(*list);
 			current = *list;
 		}
